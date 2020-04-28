@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:punkbeer/beer_manager.dart';
 import 'package:punkbeer/beer_model.dart';
+import 'package:punkbeer/managers/fav_manager.dart';
 
 class BeerTile extends StatefulWidget {
   final BeerModel beer;
@@ -11,7 +11,7 @@ class BeerTile extends StatefulWidget {
 }
 
 class _BeerTileState extends State<BeerTile> {
-  BeerManager beerManager = BeerManager();
+  FavManager favManager = FavManager();
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +20,14 @@ class _BeerTileState extends State<BeerTile> {
       subtitle: Text(widget.beer.tagLine),
       leading: Image.network(widget.beer.image),
       trailing: IconButton(
-        icon: Icon(beerManager.isFav(beerId: widget.beer.id) ? Icons.favorite : Icons.favorite_border),
+        icon: Icon(favManager.isFav(beerId: widget.beer.id) ? Icons.favorite : Icons.favorite_border),
         onPressed: toggleFav,
       ),
     );
   }
 
   void toggleFav() async {
-    await beerManager.toggleFav(beerId: widget.beer.id);
+    await favManager.toggleFav(beerId: widget.beer.id);
     setState(() {});
   }
 }

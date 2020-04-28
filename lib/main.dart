@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:punkbeer/home_page.dart';
-import 'package:punkbeer/login_page.dart';
+import 'package:punkbeer/screens/home_page.dart';
+import 'package:punkbeer/screens/login_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Punk Beer',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -32,6 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return StreamBuilder<FirebaseUser>(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (context, snapshot) {
+
+        return HomePage();
 
         if(snapshot.data != null)
           return HomePage();
