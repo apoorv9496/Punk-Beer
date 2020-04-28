@@ -5,6 +5,7 @@ import 'package:punkbeer/services/beer_service.dart';
 
 class BeerManager {
 
+  /// Returns list of beers for page passed.
   Future<List<BeerModel>> fetchPage(int pageNum) async {
     String res = await BeerService().fetchPage(pageNum);
 

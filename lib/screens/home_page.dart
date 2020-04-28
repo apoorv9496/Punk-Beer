@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:punkbeer/managers/beer_manager.dart';
 import 'package:punkbeer/beer_model.dart';
 import 'package:punkbeer/beer_tile.dart';
+import 'package:punkbeer/managers/fav_manager.dart';
 import 'package:punkbeer/screens/fav_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,9 +12,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   BeerManager beerManager = BeerManager();
-  int currPage = 1;
+  FavManager favManager = FavManager();
 
+  int currPage = 1;
   List<BeerModel> allBeers = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    favManager.openBox();
+  }
+
+  @override
+  void dispose() {
+    favManager.closeBox();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       body: FutureBuilder<List<BeerModel>>(
         future: beerManager.fetchPage(currPage),
         builder: (context, snapshot) {
-          switch(snapshot?.connectionState) {
+          switch(snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
             case ConnectionState.active:
@@ -52,7 +68,9 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   itemCount: allBeers.length,
-                  itemBuilder: (context, index) => BeerTile(beer: allBeers[index],),
+                  itemBuilder: (context, index) {
+                    return BeerTile(beer: allBeers[index],);
+                  },
                 ),
               );
               break;

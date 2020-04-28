@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class BeerModel {
 
   int id;
@@ -14,5 +16,16 @@ class BeerModel {
     this.desc = data["description"] ?? "";
     this.tagLine = data["tagline"] ?? "";
     this.firstBrewed = data["first_brewed"] ?? "";
+  }
+
+  toJson() {
+    return json.encode({
+      "id": this.id,
+      "name": this.name,
+      "image_url": this.image,
+      "description": this.desc,
+      "tagline": this.tagLine,
+      "first_brewed": this.firstBrewed,
+    });
   }
 }

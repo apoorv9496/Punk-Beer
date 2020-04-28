@@ -20,14 +20,14 @@ class _BeerTileState extends State<BeerTile> {
       subtitle: Text(widget.beer.tagLine),
       leading: Image.network(widget.beer.image),
       trailing: IconButton(
-        icon: Icon(favManager.isFav(beerId: widget.beer.id) ? Icons.favorite : Icons.favorite_border),
+        icon: Icon(favManager.isFav(beer: widget.beer) ? Icons.favorite : Icons.favorite_border),
         onPressed: toggleFav,
       ),
     );
   }
 
   void toggleFav() async {
-    await favManager.toggleFav(beerId: widget.beer.id);
+    await favManager.toggleFav(beer: widget.beer);
     setState(() {});
   }
 }

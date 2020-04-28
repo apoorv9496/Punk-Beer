@@ -1,32 +1,64 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:punkbeer/beer_model.dart';
-import 'package:punkbeer/services/beer_service.dart';
-import 'package:punkbeer/services/fav_service.dart';
 
 class FavManager {
 
-  FavManager() {
+  /// Default box.
+  String box = "fav";
 
-  }
-
-  Future<List<BeerModel>> getFavorites() async {
-    String res = await FavService().getFavorites();
+  /// Returns list of favorite beers.
+  List<BeerModel> getFavorites() {
+    if(this.box == null) return [];
 
     List<BeerModel> beers = [];
-    List<dynamic> beerList = json.decode(res);
-    beerList?.forEach((beer) {
-      beers.add(BeerModel.fromJson(beer));
-    });
 
+    if(Hive.isBoxOpen(this.box)) {
+      Hive.box(this.box).toMap().forEach((beerId, beerData) {
+        beers.add(BeerModel.fromJson(json.decode(beerData)));
+      });
+    }
+    
     return beers;
   }
 
-  bool isFav({int beerId}) {
+  /// Returns fav status of the passed beer.
+  bool isFav({BeerModel beer}) {
+    if(this.box == null) return false;
+
+    if(Hive.isBoxOpen(this.box)) {
+      if(Hive.box(this.box).containsKey(beer.id))
+        return true;
+    }
+
     return false;
   }
 
-  Future<Null> toggleFav({int beerId}) async {
+  Future<Null> toggleFav({BeerModel beer}) async {
+    if(this.box == null) return;
 
+    if(Hive.isBoxOpen(this.box)) {
+      if(Hive.box(this.box).containsKey(beer.id)) {
+        Hive.box(this.box).delete(beer.id);
+      } else {
+        Hive.box(this.box).put(beer.id, beer.toJson());
+      }
+    }
+  }
+
+  /// Names and opens the box.
+  Future<Null> openBox() async {
+
+    // Todo: Name boxes as a suffix to user's email to store favorites of each user separately.
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    this.box = "fav";
+    await Hive.openBox(box);
+  }
+
+  /// Closes all hive boxes.
+  void closeBox() {
+    Hive.close();
   }
 }
