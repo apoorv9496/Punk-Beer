@@ -1,6 +1,8 @@
-# punkbeer
+# Punk Beer
 
 Punk Beer Application
+
+Test Account: Email: testuser@gmail.comPassword: testUser123
 
 ## Getting Started
 
